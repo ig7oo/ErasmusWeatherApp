@@ -1,17 +1,25 @@
 <?php
-
-
 header('Content-Type: application/json');
 
-$mysqli = new mysqli("db", "user", "pass", "weather");
+// DB config
+$host = 'db';  // service name from docker-compose
+$db   = 'weather';
+$user = 'user';
+$pass = 'pass';
 
-if ($mysqli->connect_error) {
+// Create connection
+$conn = new mysqli($host, $user, $pass, $db);
+
+// Check connection
+if ($conn->connect_error) {
     http_response_code(500);
     echo json_encode(["error" => "Database connection failed"]);
     exit;
 }
 
-$result = $mysqli->query("SELECT label, value FROM weather_data");
+// Query data
+$sql = "SELECT * FROM weather_data ORDER BY date ASC";
+$result = $conn->query($sql);
 
 $data = [];
 while ($row = $result->fetch_assoc()) {
@@ -19,4 +27,5 @@ while ($row = $result->fetch_assoc()) {
 }
 
 echo json_encode($data);
+$conn->close();
 ?>

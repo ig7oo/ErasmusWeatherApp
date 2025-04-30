@@ -21,7 +21,9 @@ services:
       context: .
       dockerfile: ./docker/php-api/Dockerfile
     volumes:
-      - ./docker/php-api:/var/www/html
+      - ./src:/var/www/html
+    ports:
+      - "8081:80" 
     depends_on:
       - db
 
