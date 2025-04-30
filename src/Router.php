@@ -17,11 +17,11 @@ class Router {
 
         switch ($path) 
         {
-            case 'get/marienham':
+            case 'get/mariehamn':
                 $table = 'weather_data_fin';
                 break;
             case 'get/wuerzburg':
-                $table = 'weather_data';
+                $table = 'weather_data_ger';
                 break;
             default:
                 http_response_code(404);
