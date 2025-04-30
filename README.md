@@ -43,5 +43,19 @@ create table weather_data_ger (
 ) 
 ```
 
+and then add example data.
 
-and then add example data 
+## TechStack 
+
+### Frontend 
+    Javascript: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+    ChartJS: https://www.chartjs.org/docs/latest/
+
+### Backend 
+    PHP: https://www.php.net/docs.php
+    Docker: https://docs.docker.com/
+
+### Database 
+    MySQL: https://dev.mysql.com/doc/
+
+
