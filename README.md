@@ -21,10 +21,9 @@ port: 3306
 user: user 
 password: pass 
 
-you will need to create a table with the following command (i am too lazy to write a script to do this on startup) : 
-
+you will need to create two tables with the following command (i am too lazy to write a script to do this on startup) : 
 ```
-create table weather_data (
+create table weather_data_fin (
     id INT auto_increment primary key,
     avg_temp_c float,
     avg_temp_f float,
@@ -33,4 +32,16 @@ create table weather_data (
     date date
 ) 
 ```
+```
+create table weather_data_ger (
+    id INT auto_increment primary key,
+    avg_temp_c float,
+    avg_temp_f float,
+    avg_airpressure float,
+    avg_humidity float,
+    date date
+) 
+```
+
+
 and then add example data 

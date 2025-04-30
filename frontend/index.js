@@ -1,7 +1,7 @@
 
 const chartObject = document.getElementById('weatherChart');
 
-fetch('http://localhost:8081/index.php')
+fetch('http://localhost:8081/GET/wuerzburg')
   .then(response => response.json())
   .then(data => {
     const xLabels = data.map(entry => entry.date);
