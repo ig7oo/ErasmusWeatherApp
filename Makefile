@@ -5,7 +5,7 @@ startup:
 	build_dev install run
 
 build_dev:
-	docker build -t weatherapp .
+	docker-compose build
 
 run:
 	docker-compose up -d
