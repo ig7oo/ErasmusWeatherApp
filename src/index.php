@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: http://localhost:8080');
 
 // DB config
 $host = 'db';  // service name from docker-compose
