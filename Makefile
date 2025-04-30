@@ -1,5 +1,5 @@
 install:
-	npm install chart.js
+	mkdir -p vendor && cd vendor && npm init -y && npm install chart.js
 
 startup:
 	build_dev install run
