@@ -43,6 +43,8 @@ create table weather_data_ger (
 ) 
 ```
 
+TODO: for ESP32 Data we will need to use "Datetime" type for date, not "date"
+
 and then add example data.
 
 ## TechStack 
