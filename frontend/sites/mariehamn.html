@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mariehamn Weather</title>
+    <link rel="stylesheet" href="../style/mariehamn.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <header class="sticky-header">
+        <div class="header-left">
+            <a href="wurzhamn.html" class="home-icon">
+                <i class="fas fa-home"></i>
+            </a>
+            <h1>Mariehamn</h1>
+        </div>
+    </header>
+
+    <div class="button-container">
+        <button class="graph-button active" data-type="temperature">
+            <i class="fas fa-temperature-high"></i>
+            Temperature
+        </button>
+        <button class="graph-button" data-type="humidity">
+            <i class="fas fa-tint"></i>
+            Humidity
+        </button>
+        <button class="graph-button" data-type="pressure">
+            <i class="fas fa-compress-alt"></i>
+            Pressure
+        </button>
+    </div>
+
+    <div class="graph-container">
+        <div class="graph-box">
+            <canvas id="weatherChart"></canvas>
+        </div>
+    </div>
+
+    <script src="../js/mariehamn.js"></script>
+  </body>
+</html>

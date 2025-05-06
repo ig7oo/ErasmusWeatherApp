@@ -1,99 +1,55 @@
+// Dummy data
+const temperatureData = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  values: [2, 4, 8, 12, 18, 22]
+};
 
-/* 
- * Fills the weather data for Würzburg
- */
+const humidityData = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  values: [85, 80, 75, 70, 65, 60]
+};
 
-const chartObject = document.getElementById('weatherChartWuerzburg');
+const pressureData = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  values: [1013, 1015, 1012, 1010, 1014, 1016]
+};
 
-fetch('http://localhost:8081/GET/wuerzburg')
-  .then(response => response.json())
-  .then(data => {
-    const xLabels = data.map(entry => entry.date);
-    const tempDataC = data.map(entry => entry.avg_temp_c);
-    const tempDataF = data.map(entry => entry.avg_temp_f);
-    const humidityData = data.map (entry => entry.avg_humidity)
-
-    const chart = new Chart(chartObject, {
-      type: 'line',
-      data: {
-        labels: xLabels,
-        datasets: [
-          {
-          label: 'Temp (°C)',
-          data: tempDataC,
-          borderColor: 'rgba(75, 192, 192, 1)',
+// Create charts
+new Chart(document.getElementById('temperatureChart'), {
+  type: 'line',
+  data: {
+      labels: temperatureData.labels,
+      datasets: [{
+          label: 'Temperature (°C)',
+          data: temperatureData.values,
+          borderColor: '#ff6384',
           tension: 0.1
-          },
-          {
-            label: 'Temp (°F)',
-            data: tempDataF,
-            borderColor: 'rgb(167, 59, 26)',
-            tension: 0.1
-            },
-          {
-            label: 'humidity (%)',
-            data: humidityData,
-            borderColor: 'rgb(26, 59, 167)',
-            tension: 0.1
-            },
+      }]
+  }
+});
 
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    });
-  })
-  .catch(error => {
-    console.error('Failed to fetch weather data:', error);
-  });
-
-/* 
- * Fills the weather data for Mariehamn
- */  
-  const chartObjectM = document.getElementById('weatherChartMariehamn');
-
-fetch('http://localhost:8081/GET/mariehamn')
-  .then(response => response.json())
-  .then(data => {
-    const xLabels = data.map(entry => entry.date);
-    const tempDataC = data.map(entry => entry.avg_temp_c);
-    const tempDataF = data.map(entry => entry.avg_temp_f);
-    const humidityData = data.map (entry => entry.avg_humidity)
-
-    const chart = new Chart(chartObjectM, {
-      type: 'line',
-      data: {
-        labels: xLabels,
-        datasets: [
-          {
-          label: 'Temp (°C)',
-          data: tempDataC,
-          borderColor: 'rgba(75, 192, 192, 1)',
+new Chart(document.getElementById('humidityChart'), {
+  type: 'line',
+  data: {
+      labels: humidityData.labels,
+      datasets: [{
+          label: 'Humidity (%)',
+          data: humidityData.values,
+          borderColor: '#36a2eb',
           tension: 0.1
-          },
-          {
-            label: 'Temp (°F)',
-            data: tempDataF,
-            borderColor: 'rgb(167, 59, 26)',
-            tension: 0.1
-            },
-          {
-            label: 'humidity (%)',
-            data: humidityData,
-            borderColor: 'rgb(26, 59, 167)',
-            tension: 0.1
-            },
+      }]
+  }
+});
 
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    });
-  })
-  .catch(error => {
-    console.error('Failed to fetch weather data:', error);
-  });
+new Chart(document.getElementById('pressureChart'), {
+  type: 'line',
+  data: {
+      labels: pressureData.labels,
+      datasets: [{
+          label: 'Pressure (hPa)',
+          data: pressureData.values,
+          borderColor: '#4bc0c0',
+          tension: 0.1
+      }]
+  }
+});
