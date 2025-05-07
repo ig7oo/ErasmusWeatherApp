@@ -10,12 +10,24 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <header class="sticky-header">
-        <div class="header-left">
-            <a href="wurzhamn.html" class="home-icon">
-                <i class="fas fa-home"></i>
-            </a>
-            <h1>Mariehamn</h1>
+    <header class="header">
+        <a href="wurzhamn.html" class="home-icon">
+            <i class="fas fa-home"></i>
+        </a>
+        <h1 class="city-name">Mariehamn</h1>
+        <div class="language-selector">
+            <div class="selected-language">
+                <img src="../images/english.png" alt="English" class="lang-flag">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="language-dropdown">
+                <div class="language-option">
+                    <img src="../images/german.png" alt="German" class="lang-flag">
+                </div>
+                <div class="language-option">
+                    <img src="../images/swedish.png" alt="Swedish" class="lang-flag">
+                </div>
+            </div>
         </div>
     </header>
 
@@ -39,6 +51,21 @@
             <canvas id="weatherChart"></canvas>
         </div>
     </div>
+
+    <div class="date-selector">
+        <div class="date-selector-container">
+            <div class="date-inputs">
+                <input type="date" class="date-input" id="startDate">
+                <span class="date-separator">to</span>
+                <input type="date" class="date-input" id="endDate">
+            </div>
+            <button class="date-button">
+                <i class="fas fa-calendar-alt"></i>
+                Update Date Range
+            </button>
+        </div>
+    </div>
+    
 
     <script src="../js/mariehamn.js"></script>
   </body>

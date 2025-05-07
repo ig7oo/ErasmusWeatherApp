@@ -4,19 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Weather Comparison</title>
+    <title>Comparison</title>
     <link rel="stylesheet" href="../style/compare.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <header class="sticky-header">
-        <div class="header-left">
-            <a href="wurzhamn.html" class="home-icon">
-                <i class="fas fa-home"></i>
-            </a>
-            <h1>Compare Weather</h1>
-        </div>
+    <header class="header">
+        <a href="wurzhamn.html" class="home-icon">
+            <i class="fas fa-home"></i>
+        </a>
+        <h1 class="city-name">Comparison</h1>
         <div class="language-selector">
             <div class="selected-language">
                 <img src="../images/english.png" alt="English" class="lang-flag">
@@ -31,7 +29,8 @@
                 </div>
             </div>
         </div>
-    </header>    
+    </header>
+     
 
     <div class="button-container">
         <button class="graph-button active" data-type="temperature">
@@ -69,21 +68,9 @@
         </div>
     </div>
     
-    <div class="language-selector">
-        <div class="selected-language">
-            <img src="/frontend/images/english.png" alt="English" class="lang-flag">
-            <i class="fas fa-chevron-down"></i>
-        </div>
-        <div class="language-dropdown">
-            <div class="language-option">
-                <img src="/frontend/images/german.png" alt="German" class="lang-flag">
-            </div>
-            <div class="language-option">
-                <img src="/frontend/images/swedish.png" alt="Swedish" class="lang-flag">
-            </div>
-        </div>
-    </div>
-    
+
+
+    <div class="divider"></div>
 
     <script src="../js/compare.js"></script>
     <script src="../js/language.js"></script>
