@@ -1,6 +1,5 @@
 let currentChart = null;
-
-const data = {
+let wuerzburgWeatherData = {
     temperature: {
         label: 'Temperature (°C)',
         values: [2, 4, 8, 12, 18, 22],
@@ -41,28 +40,43 @@ function updateChart(type) {
 
 async function fetchDataWuerzburg() {
     try {
-        const response = await fetch('/get/wuerzburg');
+        const response = await fetch('http://localhost:8081/get/wuerzburg');
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
-        const wuerzburgWeatherData = await response.json();
-        processWuerzrburgWeatherData(wuerzburgWeatherData);
+        const data = await response.json();
+        processWuerzburgWeatherData(data);
     } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
     }
 }
 
-function processWuerzrburgWeatherData(wuerzburgWeatherData) {
-    const output = wuerzburgWeatherData.map(item => {
-        return {
-            temperature: item.temperature,
-            humidity: item.humidity,
-            timestamp: item.timestamp
-        };
-        
-    })
+function processWuerzburgWeatherData(data) {
+    // Extract dates for labels
+    const newLabels = data.map(item => item.date);
+    
+    // Update the labels array
+    labels.length = 0;
+    newLabels.forEach(label => labels.push(label));
+    
+    // Update the data
+    wuerzburgWeatherData.temperature.values = data.map(item => item.avg_temp_c);
+    wuerzburgWeatherData.humidity.values = data.map(item => item.avg_humidity);
+    wuerzburgWeatherData.pressure.values = data.map(item => item.avg_airpressure);
+    
+    // Update the current chart
+    if (currentChart) {
+        const activeButton = document.querySelector('.graph-button.active');
+        if (activeButton) {
+            updateChart(activeButton.dataset.type);
+        } else {
+            updateChart('temperature');
+        }
+    }
 }
 
+// Fetch data initially and then every 5 seconds
+fetchDataWuerzburg();
 setInterval(fetchDataWuerzburg, 5000);
 
 document.addEventListener('DOMContentLoaded', () => {
