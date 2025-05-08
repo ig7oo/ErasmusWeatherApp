@@ -30,14 +30,40 @@ function updateChart(type) {
         data: {
             labels: labels,
             datasets: [{
-                label: data[type].label,
-                data: data[type].values,
-                borderColor: data[type].color,
+                label: marienhamnWeatherData[type].label,
+                data: marienhamnWeatherData[type].values,
+                borderColor: marienhamnWeatherData[type].color,
                 tension: 0.1
             }]
         }
     });
 }
+
+async function fetchDataMarienhamn() {
+    try {
+        const response = await fetch('http://localhost:8081/get/mariehamn');
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const marienhamnWeatherData = await response.json();
+        processWeatherData(marienhamnWeatherData);
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+    }
+}
+
+function processMarienhamnWeatherData(marienhamnWeatherData) {
+    const output = marienhamnWeatherData.map(item => {
+        return {
+            temperature: item.temperature,
+            humidity: item.humidity,
+            timestamp: item.timestamp
+        };
+        
+    })
+}
+
+setInterval(fetchDataMarienhamn, 5000);
 
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.graph-button');
