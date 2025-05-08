@@ -13,7 +13,7 @@ body::before {
     left: 0;
     width: 50%;
     height: 100%;
-    background-image: url('../images/wurzburg.jpg');
+    background-image: url('images/wurzburg.jpg');
     background-size: cover;
     background-position: center;
     z-index: -1;
@@ -26,7 +26,7 @@ body::after {
     right: 0;
     width: 50%;
     height: 100%;
-    background-image: url('../images/mariehamn.jpg');
+    background-image: url('images/mariehamn.jpg');
     background-size: cover;
     background-position: center;
     z-index: -1;
