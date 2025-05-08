@@ -6,7 +6,8 @@ body {
     overflow-x: hidden;
 }
 
-body::before {
+/* Split background only applies to default body */
+body:not(.wurzburg-bg):not(.mariehamn-bg)::before {
     content: '';
     position: fixed;
     top: 0;
@@ -19,7 +20,7 @@ body::before {
     z-index: -1;
 }
 
-body::after {
+body:not(.wurzburg-bg):not(.mariehamn-bg)::after {
     content: '';
     position: fixed;
     top: 0;
@@ -32,14 +33,25 @@ body::after {
     z-index: -1;
 }
 
+body[style*="background"] {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+body[style*="background"]::before,
+body[style*="background"]::after {
+    content: none;
+}
+
 .divider {
     content: '';
     position: fixed;
     top: 0;
     left: 50%;
-    width: 2px;
+    width: 5px;
     height: 100%;
-    background-color: black;
+    background-color: rgb(0, 0, 0);
     transform: translateX(-50%);
     z-index: -1;
 }
@@ -73,7 +85,7 @@ body::after {
 }
 
 .home-icon:hover {
-    color: #3498db;
+    color: #c4c5c5;
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -270,29 +282,51 @@ body::after {
     position: relative;
 }
 
-.compare-circle {
+.compare-arrows {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 120px;
-    height: 120px;
-    background-color: black;
-    border-radius: 50%;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    gap: 20px;
+    padding: 15px 30px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 25px;
+    backdrop-filter: blur(8px);
+    border: 2px solid black;
+    z-index: 1001;
+    transition: all 0.3s ease;
 }
 
-.compare-circle:hover {
+.compare-arrows:hover {
     transform: translate(-50%, -50%) scale(1.1);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.3);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
+.compare-arrows i {
+    font-size: 24px;
+    color: white;
+    animation: arrowPulse 1.5s infinite;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.compare-arrows span {
+    text-shadow: 2px 2px 0 #000;
+    transition: all 0.3s ease;
+}
+
+.compare-arrows:hover span {
+    transform: scale(1.2);
+    text-shadow: 3px 3px 0 #000;
+    letter-spacing: 2px;
+}
+
+@keyframes arrowPulse {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+}
 
 .city-links {
     position: fixed;
@@ -328,16 +362,18 @@ body::after {
     transition: transform 0.3s ease, text-shadow 0.3s ease;
 }
 
-.city-link:hover {
-    transform: scale(1.3);
-}
-
 .city-link.left {
     left: 0;
+    width: calc(50% - 1px);
 }
 
 .city-link.right {
-    right: 0;
+    left: calc(50% + 1px);
+    width: calc(50% - 1px);
+}
+
+.city-link:hover {
+    transform: scale(1.3);
 }
 
 a {
@@ -372,4 +408,12 @@ canvas {
     .graph-box {
         padding: 1rem;
     }
+}
+
+.wurzburg-bg {
+    background: url('images/wurzburg.jpg') center/cover no-repeat fixed;
+}
+
+.mariehamn-bg {
+    background: url('images/mariehamn.jpg') center/cover no-repeat fixed;
 }
