@@ -30,14 +30,40 @@ function updateChart(type) {
         data: {
             labels: labels,
             datasets: [{
-                label: data[type].label,
-                data: data[type].values,
-                borderColor: data[type].color,
+                label: wuerzburgWeatherData[type].label,
+                data: wuerzburgWeatherData[type].values,
+                borderColor: wuerzburgWeatherData[type].color,
                 tension: 0.1
             }]
         }
     });
 }
+
+async function fetchDataWuerzburg() {
+    try {
+        const response = await fetch('/get/wuerzburg');
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const wuerzburgWeatherData = await response.json();
+        processWuerzrburgWeatherData(wuerzburgWeatherData);
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+    }
+}
+
+function processWuerzrburgWeatherData(wuerzburgWeatherData) {
+    const output = wuerzburgWeatherData.map(item => {
+        return {
+            temperature: item.temperature,
+            humidity: item.humidity,
+            timestamp: item.timestamp
+        };
+        
+    })
+}
+
+setInterval(fetchDataWuerzburg, 5000);
 
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.graph-button');
