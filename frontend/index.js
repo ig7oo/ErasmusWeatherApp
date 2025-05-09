@@ -1,55 +1,115 @@
-// Dummy data
-const temperatureData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  values: [2, 4, 8, 12, 18, 22]
-};
-
-const humidityData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  values: [85, 80, 75, 70, 65, 60]
-};
-
-const pressureData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  values: [1013, 1015, 1012, 1010, 1014, 1016]
-};
-
-// Create charts
-new Chart(document.getElementById('temperatureChart'), {
-  type: 'line',
-  data: {
-      labels: temperatureData.labels,
-      datasets: [{
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    // Fetch data from your API for Würzburg (Germany)
+    const response = await fetch('http://localhost:8081/get/wuerzburg');
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    
+    const weatherData = await response.json();
+    
+    // Process the data for charts
+    const labels = weatherData.map(item => item.date);
+    const temperatureValues = weatherData.map(item => item.avg_temp_c);
+    const humidityValues = weatherData.map(item => item.avg_humidity);
+    const pressureValues = weatherData.map(item => item.avg_airpressure);
+    
+    // Create temperature chart
+    new Chart(document.getElementById('temperatureChart'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
           label: 'Temperature (°C)',
-          data: temperatureData.values,
+          data: temperatureValues,
           borderColor: '#ff6384',
           tension: 0.1
-      }]
-  }
-});
-
-new Chart(document.getElementById('humidityChart'), {
-  type: 'line',
-  data: {
-      labels: humidityData.labels,
-      datasets: [{
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: 'Temperature (°C)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          }
+        }
+      }
+    });
+    
+    // Create humidity chart
+    new Chart(document.getElementById('humidityChart'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
           label: 'Humidity (%)',
-          data: humidityData.values,
+          data: humidityValues,
           borderColor: '#36a2eb',
           tension: 0.1
-      }]
-  }
-});
-
-new Chart(document.getElementById('pressureChart'), {
-  type: 'line',
-  data: {
-      labels: pressureData.labels,
-      datasets: [{
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: 'Humidity (%)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          }
+        }
+      }
+    });
+    
+    // Create pressure chart
+    new Chart(document.getElementById('pressureChart'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
           label: 'Pressure (hPa)',
-          data: pressureData.values,
+          data: pressureValues,
           borderColor: '#4bc0c0',
           tension: 0.1
-      }]
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: 'Pressure (hPa)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          }
+        }
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error fetching weather data:', error);
+    document.getElementById('errorMessage').textContent = 
+      'Failed to load weather data. Please try again later.';
   }
 });

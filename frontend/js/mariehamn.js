@@ -149,7 +149,7 @@ function updateChart(type) {
 // Function to fetch data from the API
 async function fetchWeatherData() {
     try {
-        // Using Würzburg API endpoint for now (will change to Mariehamn later)
+        // TODO change to mariehamn later
         const response = await fetch('http://192.168.108.13:8081/wuerzburg');
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
@@ -161,6 +161,7 @@ async function fetchWeatherData() {
     }
 }
 
+// Process the API data and update our data objects
 // Process the API data and update our data objects
 function processApiData(apiData) {
     if (!apiData || apiData.length === 0) return;
@@ -238,12 +239,29 @@ function processApiData(apiData) {
         }
     }
     
-    // Update the UI with new forecast data
-    const activeBtn = document.querySelector('.forecast-btn.active');
-    if (activeBtn) {
-        renderForecast(activeBtn.textContent.toLowerCase().includes('hourly') ? 'hourly' : 'weekly');
-    } else {
-        renderForecast('hourly');
+    // Also update the current weather display
+    updateCurrentWeatherDisplay(apiData[0]); // Changed from data[0] to apiData[0]
+}
+
+// Update the current weather display with the latest data
+// Update the current weather display with the latest data
+function updateCurrentWeatherDisplay(latestData) {
+    if (!latestData) return;
+    
+    const tempDisplay = document.querySelector('.temp-display');
+    const humidityValue = document.querySelector('.humidity-value');
+    const pressureValue = document.querySelector('.pressure-value');
+    
+    if (tempDisplay) {
+        tempDisplay.textContent = `${Math.round(latestData.temp)}°C`;
+    }
+    
+    if (humidityValue) {
+        humidityValue.textContent = `${latestData.hum}%`;
+    }
+    
+    if (pressureValue) {
+        pressureValue.textContent = `${Math.round(latestData.pressure)} hPa`;
     }
 }
 
