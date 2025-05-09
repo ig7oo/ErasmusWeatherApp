@@ -1,4 +1,7 @@
 let currentChart = null;
+let graphVisible = false;
+
+// Weather data object with initial values
 let marienhamnWeatherData = {
     temperature: {
         label: 'Temperature (°C)',
@@ -17,8 +20,10 @@ let marienhamnWeatherData = {
     }
 };
 
+// Initial labels
 const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
+// Function to update the chart with the selected data type
 function updateChart(type) {
     if (currentChart) {
         currentChart.destroy();
@@ -32,15 +37,49 @@ function updateChart(type) {
                 label: marienhamnWeatherData[type].label,
                 data: marienhamnWeatherData[type].values,
                 borderColor: marienhamnWeatherData[type].color,
-                tension: 0.1
+                backgroundColor: marienhamnWeatherData[type].color + '33', // Add transparency
+                tension: 0.1,
+                fill: true
             }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                }
+            }
         }
     });
 }
 
+// Function to fetch data from the API
 async function fetchDataMarienhamn() {
     try {
-        const response = await fetch('http://localhost:8081/get/mariehamn');
+        // TODO change to mariehamn later
+        const response = await fetch('http://192.168.108.13:8081/wuerzburg');
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
@@ -51,6 +90,7 @@ async function fetchDataMarienhamn() {
     }
 }
 
+// Process the fetched data
 function processMarienhamnWeatherData(data) {
     // Extract dates for labels
     const newLabels = data.map(item => item.date);
@@ -60,12 +100,12 @@ function processMarienhamnWeatherData(data) {
     newLabels.forEach(label => labels.push(label));
     
     // Update the data
-    marienhamnWeatherData.temperature.values = data.map(item => item.avg_temp_c);
-    marienhamnWeatherData.humidity.values = data.map(item => item.avg_humidity);
-    marienhamnWeatherData.pressure.values = data.map(item => item.avg_airpressure);
+    marienhamnWeatherData.temperature.values = data.map(item => item.temp);
+    marienhamnWeatherData.humidity.values = data.map(item => item.hum);
+    marienhamnWeatherData.pressure.values = data.map(item => item.pressure);
     
-    // Update the current chart
-    if (currentChart) {
+    // Update the current chart if it exists and is visible
+    if (currentChart && graphVisible) {
         const activeButton = document.querySelector('.graph-button.active');
         if (activeButton) {
             updateChart(activeButton.dataset.type);
@@ -73,23 +113,82 @@ function processMarienhamnWeatherData(data) {
             updateChart('temperature');
         }
     }
+    
+    // Also update the current weather display
+    updateCurrentWeatherDisplay(data[0]);
 }
 
-// Fetch data initially and then every 5 seconds
-fetchDataMarienhamn();
-setInterval(fetchDataMarienhamn, 5000);
+// Update the current weather display with the latest data
+function updateCurrentWeatherDisplay(latestData) {
+    if (latestData) {
+        document.querySelector('.temp-display').textContent = `${Math.round(latestData.avg_temp_c)}°C`;
+    }
+}
+
+// Function to toggle graph visibility
+function toggleGraph() {
+    const graphContainer = document.getElementById('graph-container');
+    const graphButtons = document.getElementById('graph-buttons');
+    const showGraphBtn = document.getElementById('show-graph-btn');
+    
+    graphVisible = !graphVisible;
+    
+    if (graphVisible) {
+        // Show graph and buttons
+        graphContainer.style.display = 'block';
+        graphButtons.style.display = 'flex';
+        
+        // Change button text to "Hide Graph"
+        showGraphBtn.innerHTML = '<i class="fas fa-chart-line"></i><span>Hide Graph</span>';
+        
+        // Initialize the chart with the active type
+        const activeType = document.querySelector('.graph-button.active')?.dataset.type || 'temperature';
+        updateChart(activeType);
+        
+        // Scroll to graph
+        graphContainer.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        // Hide graph and buttons
+        graphContainer.style.display = 'none';
+        graphButtons.style.display = 'none';
+        
+        // Change button text back to "Show Graph"
+        showGraphBtn.innerHTML = '<i class="fas fa-chart-line"></i><span>Show Graph</span>';
+        
+        // Destroy chart to free up resources
+        if (currentChart) {
+            currentChart.destroy();
+            currentChart = null;
+        }
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-    const buttons = document.querySelectorAll('.graph-button');
+    // Set default dates (today and a week from today)
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
     
+    document.getElementById('start-date').valueAsDate = today;
+    document.getElementById('end-date').valueAsDate = nextWeek;
+    
+    // Graph type buttons
+    const buttons = document.querySelectorAll('.graph-button');
     buttons.forEach(button => {
         button.addEventListener('click', () => {
             buttons.forEach(b => b.classList.remove('active'));
             button.classList.add('active');
-            updateChart(button.dataset.type);
+            
+            if (graphVisible) {
+                updateChart(button.dataset.type);
+            }
         });
     });
-
-    // Initialize with temperature graph
-    updateChart('temperature');
+    
+    // Show/Hide graph button
+    document.getElementById('show-graph-btn').addEventListener('click', toggleGraph);
+    
+    // Fetch data initially and then every 5 seconds
+    fetchDataMarienhamn();
+    setInterval(fetchDataMarienhamn, 5000);
 });
