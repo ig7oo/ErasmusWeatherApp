@@ -162,6 +162,7 @@ async function fetchWeatherData() {
 }
 
 // Process the API data and update our data objects
+// Process the API data and update our data objects
 function processApiData(apiData) {
     if (!apiData || apiData.length === 0) return;
     
@@ -239,15 +240,28 @@ function processApiData(apiData) {
     }
     
     // Also update the current weather display
-    updateCurrentWeatherDisplay(data[0]);
+    updateCurrentWeatherDisplay(apiData[0]); // Changed from data[0] to apiData[0]
 }
 
 // Update the current weather display with the latest data
+// Update the current weather display with the latest data
 function updateCurrentWeatherDisplay(latestData) {
-    if (latestData) {
-        document.querySelector('.temp-display').textContent = `${Math.round(latestData.temp)}°C`;
-        document.querySelector('.humidity-value').textContent = `${latestData.hum}%`;
-        document.querySelector('.pressure-value').textContent = `${Math.round(latestData.pressure)} hPa`;
+    if (!latestData) return;
+    
+    const tempDisplay = document.querySelector('.temp-display');
+    const humidityValue = document.querySelector('.humidity-value');
+    const pressureValue = document.querySelector('.pressure-value');
+    
+    if (tempDisplay) {
+        tempDisplay.textContent = `${Math.round(latestData.temp)}°C`;
+    }
+    
+    if (humidityValue) {
+        humidityValue.textContent = `${latestData.hum}%`;
+    }
+    
+    if (pressureValue) {
+        pressureValue.textContent = `${Math.round(latestData.pressure)} hPa`;
     }
 }
 
