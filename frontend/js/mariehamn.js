@@ -79,7 +79,7 @@ function updateChart(type) {
 async function fetchDataMarienhamn() {
     try {
         // TODO change to mariehamn later
-        const response = await fetch('http://192.168.108.13:8081/wuerzburg');
+        const response = await fetch('http://192.168.108.13:8081/marienhamn');
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
@@ -121,7 +121,7 @@ function processMarienhamnWeatherData(data) {
 // Update the current weather display with the latest data
 function updateCurrentWeatherDisplay(latestData) {
     if (latestData) {
-        document.querySelector('.temp-display').textContent = `${Math.round(latestData.avg_temp_c)}°C`;
+        document.querySelector('.temp-display').textContent = `${Math.round(latestData.temp)}°C`;
     }
 }
 

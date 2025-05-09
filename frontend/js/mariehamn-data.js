@@ -1,29 +1,29 @@
 const weatherData = {
     current: {
         temp: 19,
-        humidity: 68,
+        hum: 68,
         pressure: 1013,
         feelsLike: 18,
         windSpeed: 12
     },
     hourly: [
-        { time: "Now", temp: 19, humidity: 68, pressure: 1013 },
-        { time: "2 PM", temp: 20, humidity: 65, pressure: 1012 },
-        { time: "4 PM", temp: 21, humidity: 62, pressure: 1012 },
-        { time: "6 PM", temp: 19, humidity: 70, pressure: 1011 },
-        { time: "8 PM", temp: 17, humidity: 75, pressure: 1011 },
-        { time: "10 PM", temp: 16, humidity: 78, pressure: 1010 },
-        { time: "12 AM", temp: 15, humidity: 80, pressure: 1010 },
-        { time: "2 AM", temp: 14, humidity: 82, pressure: 1009 }
+        { time: "Now", temp: 19, hum: 68, pressure: 1013 },
+        { time: "2 PM", temp: 20, hum: 65, pressure: 1012 },
+        { time: "4 PM", temp: 21, hum: 62, pressure: 1012 },
+        { time: "6 PM", temp: 19, hum: 70, pressure: 1011 },
+        { time: "8 PM", temp: 17, hum: 75, pressure: 1011 },
+        { time: "10 PM", temp: 16, hum: 78, pressure: 1010 },
+        { time: "12 AM", temp: 15, hum: 80, pressure: 1010 },
+        { time: "2 AM", temp: 14, hum: 82, pressure: 1009 }
     ],
     weekly: [
-        { time: "Today", temp: 19, humidity: 68, pressure: 1013 },
-        { time: "Tue", temp: 22, humidity: 60, pressure: 1014 },
-        { time: "Wed", temp: 20, humidity: 65, pressure: 1012 },
-        { time: "Thu", temp: 18, humidity: 85, pressure: 1009 },
-        { time: "Fri", temp: 17, humidity: 80, pressure: 1010 },
-        { time: "Sat", temp: 21, humidity: 62, pressure: 1015 },
-        { time: "Sun", temp: 20, humidity: 65, pressure: 1013 }
+        { time: "Today", temp: 19, hum: 68, pressure: 1013 },
+        { time: "Tue", temp: 22, hum: 60, pressure: 1014 },
+        { time: "Wed", temp: 20, hum: 65, pressure: 1012 },
+        { time: "Thu", temp: 18, hum: 85, pressure: 1009 },
+        { time: "Fri", temp: 17, hum: 80, pressure: 1010 },
+        { time: "Sat", temp: 21, hum: 62, pressure: 1015 },
+        { time: "Sun", temp: 20, hum: 65, pressure: 1013 }
     ]
 };
 
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateCurrentWeather(data) {
         currentTemp.textContent = `${data.temp}°C`;
-        document.querySelector('.humidity-value').textContent = `${data.hum}%`;
+        document.querySelector('.hum-value').textContent = `${data.hum}%`;
         document.querySelector('.pressure-value').textContent = `${data.pressure} hPa`;
     }
 
@@ -75,6 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function updateCurrentWeather(data) {
     document.querySelector('.temp-display').textContent = `${data.temp}°C`;
-    document.querySelector('.humidity-value').textContent = `${data.humidity}%`;
+    document.querySelector('.hum-value').textContent = `${data.hum}%`;
     document.querySelector('.pressure-value').textContent = `${data.pressure} hPa`;
 }

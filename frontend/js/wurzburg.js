@@ -40,7 +40,7 @@ function updateChart(type) {
 
 async function fetchDataWuerzburg() {
     try {
-        const response = await fetch('http://localhost:8081/get/wuerzburg');
+        const response = await fetch('http://192.168.108.13:8081/wuerzburg');
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
@@ -60,9 +60,9 @@ function processWuerzburgWeatherData(data) {
     newLabels.forEach(label => labels.push(label));
     
     // Update the data
-    wuerzburgWeatherData.temperature.values = data.map(item => item.avg_temp_c);
-    wuerzburgWeatherData.humidity.values = data.map(item => item.avg_humidity);
-    wuerzburgWeatherData.pressure.values = data.map(item => item.avg_airpressure);
+    wuerzburgWeatherData.temperature.values = data.map(item => item.temp);
+    wuerzburgWeatherData.humidity.values = data.map(item => item.hum);
+    wuerzburgWeatherData.pressure.values = data.map(item => item.pressure);
     
     // Update the current chart
     if (currentChart) {
