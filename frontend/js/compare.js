@@ -3,17 +3,17 @@ const weatherData = {
     mariehamn: {
         hourly: [
             { time: "Now", temp: 19, hum: 68, pressure: 1013 },
-            { time: "2 PM", temp: 20, hum: 65, pressure: 1012 },
-            { time: "4 PM", temp: 21, hum: 62, pressure: 1012 },
-            { time: "6 PM", temp: 19, hum: 70, pressure: 1011 }
+            { time: "11 PM", temp: 18, hum: 70, pressure: 1012 },
+            { time: "10 PM", temp: 17, hum: 72, pressure: 1012 },
+            { time: "9 PM", temp: 16, hum: 75, pressure: 1011 }
         ]
     },
     wurzburg: {
         hourly: [
             { time: "Now", temp: 22, hum: 60, pressure: 1015 },
-            { time: "2 PM", temp: 23, hum: 58, pressure: 1014 },
-            { time: "4 PM", temp: 24, hum: 55, pressure: 1013 },
-            { time: "6 PM", temp: 22, hum: 62, pressure: 1012 }
+            { time: "11 PM", temp: 21, hum: 62, pressure: 1014 },
+            { time: "10 PM", temp: 20, hum: 65, pressure: 1013 },
+            { time: "9 PM", temp: 19, hum: 68, pressure: 1012 }
         ]
     }
 };
@@ -22,22 +22,22 @@ const weatherData = {
 const comparisonData = {
     temperature: {
         label: 'Temperature (°C)',
-        mariehamn: [2, 4, 8, 12, 18, 22],
-        wurzburg: [5, 8, 12, 16, 22, 26],
+        mariehamn: [19, 18, 17, 16, 15, 14],
+        wurzburg: [22, 21, 20, 19, 18, 17],
         mariehamn_color: '#ff6384',
         wurzburg_color: '#36a2eb'
     },
     humidity: {
         label: 'Humidity (%)',
-        mariehamn: [85, 80, 75, 70, 65, 60],
-        wurzburg: [75, 70, 65, 60, 55, 50],
+        mariehamn: [68, 70, 72, 75, 78, 80],
+        wurzburg: [60, 62, 65, 68, 70, 72],
         mariehamn_color: '#ff6384',
         wurzburg_color: '#36a2eb'
     },
     pressure: {
         label: 'Pressure (hPa)',
-        mariehamn: [1013, 1015, 1012, 1010, 1014, 1016],
-        wurzburg: [1015, 1017, 1014, 1012, 1016, 1018],
+        mariehamn: [1013, 1012, 1012, 1011, 1011, 1010],
+        wurzburg: [1015, 1014, 1013, 1012, 1012, 1011],
         mariehamn_color: '#ff6384',
         wurzburg_color: '#36a2eb'
     }
@@ -45,7 +45,7 @@ const comparisonData = {
 
 // Global variables
 let currentChart = null;
-const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const labels = ['Now', '11 PM', '10 PM', '9 PM', '8 PM', '7 PM'];
 let activeCity = 'both'; // Default to showing both cities
 
 // Function to update the chart with the selected data type
@@ -193,52 +193,92 @@ async function fetchWeatherData() {
 function processApiData(wurzburgApiData, mariehamnApiData) {
     if (!wurzburgApiData || !mariehamnApiData || wurzburgApiData.length === 0 || mariehamnApiData.length === 0) return;
     
-    // Create hourly forecast from API data
-    weatherData.wurzburg.hourly = wurzburgApiData.slice(0, 4).map((item, index) => {
-        const date = new Date(item.time);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        
-        return {
-            time: index === 0 ? "Now" : `${hours}:${minutes < 10 ? '0' + minutes : minutes}`,
-            temp: Math.round(item.temp),
-            hum: item.hum,
-            pressure: Math.round(item.pressure)
-        };
+    // Create hourly historical data from API data
+    // We'll use the most recent data points and format them as hourly intervals
+    
+    // Process Würzburg data
+    const processedWurzburgData = [];
+    const now = new Date();
+    
+    // Get the most recent data point for "Now"
+    const latestWurzburg = wurzburgApiData[0];
+    processedWurzburgData.push({
+        time: "Now",
+        temp: Math.round(latestWurzburg.temp),
+        hum: latestWurzburg.hum,
+        pressure: Math.round(latestWurzburg.pressure)
     });
     
-    weatherData.mariehamn.hourly = mariehamnApiData.slice(0, 4).map((item, index) => {
-        const date = new Date(item.time);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
+    // Create hourly historical data points
+    for (let i = 1; i < Math.min(6, wurzburgApiData.length); i++) {
+        const dataPoint = wurzburgApiData[i];
+        const hourOffset = i;
+        const pastHour = new Date(now);
+        pastHour.setHours(now.getHours() - hourOffset);
         
-        return {
-            time: index === 0 ? "Now" : `${hours}:${minutes < 10 ? '0' + minutes : minutes}`,
-            temp: Math.round(item.temp),
-            hum: item.hum,
-            pressure: Math.round(item.pressure)
-        };
+        const hourStr = pastHour.getHours();
+        const ampm = hourStr >= 12 ? 'PM' : 'AM';
+        const hour12 = hourStr % 12 || 12; // Convert to 12-hour format
+        
+        processedWurzburgData.push({
+            time: `${hour12} ${ampm}`,
+            temp: Math.round(dataPoint.temp),
+            hum: dataPoint.hum,
+            pressure: Math.round(dataPoint.pressure)
+        });
+    }
+    
+    // Process Mariehamn data (same approach)
+    const processedMariehamnData = [];
+    
+    // Get the most recent data point for "Now"
+    const latestMariehamn = mariehamnApiData[0];
+    processedMariehamnData.push({
+        time: "Now",
+        temp: Math.round(latestMariehamn.temp),
+        hum: latestMariehamn.hum,
+        pressure: Math.round(latestMariehamn.pressure)
     });
+    
+    // Create hourly historical data points
+    for (let i = 1; i < Math.min(6, mariehamnApiData.length); i++) {
+        const dataPoint = mariehamnApiData[i];
+        const hourOffset = i;
+        const pastHour = new Date(now);
+        pastHour.setHours(now.getHours() - hourOffset);
+        
+        const hourStr = pastHour.getHours();
+        const ampm = hourStr >= 12 ? 'PM' : 'AM';
+        const hour12 = hourStr % 12 || 12; // Convert to 12-hour format
+        
+        processedMariehamnData.push({
+            time: `${hour12} ${ampm}`,
+            temp: Math.round(dataPoint.temp),
+            hum: dataPoint.hum,
+            pressure: Math.round(dataPoint.pressure)
+        });
+    }
+    
+    // Update the weather data with processed hourly data
+    weatherData.wurzburg.hourly = processedWurzburgData;
+    weatherData.mariehamn.hourly = processedMariehamnData;
     
     // Update the chart data
-    // Extract dates for labels
-    const newLabels = wurzburgApiData.map(item => {
-        const date = new Date(item.time);
-        return `${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}`;
-    });
+    // Create new labels for the chart (hourly format)
+    const newLabels = processedWurzburgData.map(item => item.time);
     
     // Update the labels array
     labels.length = 0;
     newLabels.forEach(label => labels.push(label));
     
     // Update the chart data
-    comparisonData.temperature.wurzburg = wurzburgApiData.map(item => item.temp);
-    comparisonData.humidity.wurzburg = wurzburgApiData.map(item => item.hum);
-    comparisonData.pressure.wurzburg = wurzburgApiData.map(item => item.pressure);
+    comparisonData.temperature.wurzburg = processedWurzburgData.map(item => item.temp);
+    comparisonData.humidity.wurzburg = processedWurzburgData.map(item => item.hum);
+    comparisonData.pressure.wurzburg = processedWurzburgData.map(item => item.pressure);
     
-    comparisonData.temperature.mariehamn = mariehamnApiData.map(item => item.temp);
-    comparisonData.humidity.mariehamn = mariehamnApiData.map(item => item.hum);
-    comparisonData.pressure.mariehamn = mariehamnApiData.map(item => item.pressure);
+    comparisonData.temperature.mariehamn = processedMariehamnData.map(item => item.temp);
+    comparisonData.humidity.mariehamn = processedMariehamnData.map(item => item.hum);
+    comparisonData.pressure.mariehamn = processedMariehamnData.map(item => item.pressure);
     
     // Update the current chart if it exists
     const activeButton = document.querySelector('.graph-button.active');
@@ -253,13 +293,38 @@ function processApiData(wurzburgApiData, mariehamnApiData) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Set default dates (today and a week from today)
+    // Set default dates (today and a week ago)
     const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
+    const lastWeek = new Date();
+    lastWeek.setDate(today.getDate() - 7);
     
-    document.getElementById('start-date').valueAsDate = today;
-    document.getElementById('end-date').valueAsDate = nextWeek;
+    document.getElementById('start-date').valueAsDate = lastWeek;
+    document.getElementById('end-date').valueAsDate = today;
+    
+    // Update the title of the forecast toggle section to reflect historical data
+    const forecastToggleTitle = document.querySelector('.forecast-toggle');
+    if (forecastToggleTitle) {
+        const newTitle = document.createElement('h3');
+        newTitle.textContent = 'Historical Weather Data';
+        newTitle.style.textAlign = 'center';
+        newTitle.style.marginBottom = '10px';
+        forecastToggleTitle.parentNode.insertBefore(newTitle, forecastToggleTitle);
+    }
+    
+    // Update the button text to reflect historical data
+    const forecastBtns = document.querySelectorAll('.forecast-btn');
+    forecastBtns.forEach(btn => {
+        if (btn.dataset.city === 'both') btn.textContent = 'Both Cities';
+        if (btn.dataset.city === 'mariehamn') btn.textContent = 'Mariehamn';
+        if (btn.dataset.city === 'wurzburg') btn.textContent = 'Würzburg';
+        
+        btn.addEventListener('click', () => {
+            forecastBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeCity = btn.dataset.city;
+            renderForecast();
+        });
+    });
     
     // Graph type buttons
     const graphButtons = document.querySelectorAll('.graph-button');
@@ -268,17 +333,6 @@ document.addEventListener('DOMContentLoaded', () => {
             graphButtons.forEach(b => b.classList.remove('active'));
             button.classList.add('active');
             updateChart(button.dataset.type);
-        });
-    });
-    
-    // City toggle buttons
-    const forecastBtns = document.querySelectorAll('.forecast-btn');
-    forecastBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            forecastBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeCity = btn.dataset.city;
-            renderForecast();
         });
     });
     

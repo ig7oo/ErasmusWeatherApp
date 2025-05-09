@@ -1,28 +1,12 @@
 // Weather data object with initial values (will be replaced with API data)
 const weatherData = {
-    current: {
-        temp: 19,
-        hum: 68,
-        pressure: 1013
-    },
     hourly: [
         { time: "Now", temp: 19, hum: 68, pressure: 1013 },
-        { time: "2 PM", temp: 20, hum: 65, pressure: 1012 },
-        { time: "4 PM", temp: 21, hum: 62, pressure: 1012 },
-        { time: "6 PM", temp: 19, hum: 70, pressure: 1011 },
-        { time: "8 PM", temp: 17, hum: 75, pressure: 1011 },
-        { time: "10 PM", temp: 16, hum: 78, pressure: 1010 },
-        { time: "12 AM", temp: 15, hum: 80, pressure: 1010 },
-        { time: "2 AM", temp: 14, hum: 82, pressure: 1009 }
-    ],
-    weekly: [
-        { time: "Today", temp: 19, hum: 68, pressure: 1013 },
-        { time: "Tue", temp: 22, hum: 60, pressure: 1014 },
-        { time: "Wed", temp: 20, hum: 65, pressure: 1012 },
-        { time: "Thu", temp: 18, hum: 85, pressure: 1009 },
-        { time: "Fri", temp: 17, hum: 80, pressure: 1010 },
-        { time: "Sat", temp: 21, hum: 62, pressure: 1015 },
-        { time: "Sun", temp: 20, hum: 65, pressure: 1013 }
+        { time: "9 AM", temp: 18, hum: 70, pressure: 1012 },
+        { time: "8 AM", temp: 17, hum: 72, pressure: 1012 },
+        { time: "7 AM", temp: 16, hum: 75, pressure: 1011 },
+        { time: "6 AM", temp: 15, hum: 78, pressure: 1010 },
+        { time: "5 AM", temp: 14, hum: 80, pressure: 1010 }
     ]
 };
 
@@ -30,17 +14,17 @@ const weatherData = {
 let marienhamnWeatherData = {
     temperature: {
         label: 'Temperature (°C)',
-        values: [2, 4, 8, 12, 18, 22],
+        values: [19, 18, 17, 16, 15, 14],
         color: '#ff6384'
     },
     humidity: {
         label: 'Humidity (%)',
-        values: [85, 80, 75, 70, 65, 60],
+        values: [68, 70, 72, 75, 78, 80],
         color: '#36a2eb'
     },
     pressure: {
         label: 'Pressure (hPa)',
-        values: [1013, 1015, 1012, 1010, 1014, 1016],
+        values: [1013, 1012, 1012, 1011, 1010, 1010],
         color: '#4bc0c0'
     }
 };
@@ -50,7 +34,7 @@ let currentChart = null;
 let graphVisible = false;
 let forecastList;
 let currentTemp;
-const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const labels = ['Now', '9 AM', '8 AM', '7 AM', '6 AM', '5 AM'];
 
 // Global function for updating current weather
 function updateCurrentWeather(data) {
@@ -64,14 +48,14 @@ function updateCurrentWeather(data) {
 }
 
 // Global function for rendering forecast
-function renderForecast(type) {
+function renderForecast() {
     if (!forecastList) {
         forecastList = document.querySelector('.forecast-list');
     }
     
     if (!forecastList) return;
     
-    const data = weatherData[type];
+    const data = weatherData.hourly;
     forecastList.innerHTML = data.map((item, index) => `
         <div class="forecast-item ${index === 0 ? 'current' : ''}" 
              onclick="updateCurrentWeather(${JSON.stringify(item)})">
@@ -149,85 +133,144 @@ function updateChart(type) {
 // Function to fetch data from the API
 async function fetchWeatherData() {
     try {
-        // TODO change to mariehamn later
-        const response = await fetch('http://192.168.108.13:8081/wuerzburg');
+        // Try to fetch from the API
+        const response = await fetch('http://192.168.108.13:8081/mariehamn', {
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
+        
         const data = await response.json();
         processApiData(data);
     } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
+        console.log('Using dummy data instead');
+        
+        // Use dummy data if API fetch fails
+        const dummyData = generateDummyData();
+        processApiData(dummyData);
     }
 }
 
-// Process the API data and update our data objects
-// Process the API data and update our data objects
-function processApiData(apiData) {
-    if (!apiData || apiData.length === 0) return;
+// Generate realistic dummy data for testing
+function generateDummyData() {
+    const now = new Date();
+    const data = [];
     
-    // Update current weather with the latest data point
-    const latest = apiData[0];
-    weatherData.current.temp = Math.round(latest.temp);
-    weatherData.current.hum = latest.hum;
-    weatherData.current.pressure = Math.round(latest.pressure);
-    
-    // Create hourly forecast from API data
-    weatherData.hourly = apiData.slice(0, 8).map((item, index) => {
-        const date = new Date(item.time);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
+    // Generate data points for the current hour and previous hours
+    for (let i = 0; i < 24; i++) {
+        // Create a date for each hour
+        const time = new Date(now);
+        time.setHours(now.getHours() - i);
+        time.setMinutes(0); // Set to the start of the hour
         
-        return {
-            time: index === 0 ? "Now" : `${hours}:${minutes < 10 ? '0' + minutes : minutes}`,
-            temp: Math.round(item.temp),
-            hum: item.hum,
-            pressure: Math.round(item.pressure)
-        };
-    });
-    
-    // For weekly forecast, we'll simulate it based on the latest data
-    weatherData.weekly = [
-        { time: "Today", temp: Math.round(latest.temp), hum: latest.hum, pressure: Math.round(latest.pressure) }
-    ];
-    
-    // Add some simulated days based on the current data
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const today = new Date();
-    
-    for (let i = 1; i < 7; i++) {
-        const nextDay = new Date(today);
-        nextDay.setDate(today.getDate() + i);
-        const dayName = days[nextDay.getDay()];
-        
-        // Create some variation in the forecast
-        const tempVariation = Math.round((Math.random() * 6) - 3); // -3 to +3
-        const humVariation = Math.round((Math.random() * 10) - 5); // -5 to +5
-        const pressureVariation = Math.round((Math.random() * 6) - 3); // -3 to +3
-        
-        weatherData.weekly.push({
-            time: dayName,
-            temp: Math.round(latest.temp) + tempVariation,
-            hum: Math.max(0, Math.min(100, latest.hum + humVariation)),
-            pressure: Math.round(latest.pressure) + pressureVariation
+        // Add a data point for each hour
+        data.push({
+            time: time.toISOString(),
+            temp: 20 - (i * 0.5) + (Math.random() * 2 - 1), // Temperature decreases as we go back in time
+            hum: 65 + (Math.random() * 20 - 10), // Humidity between 55-85%
+            pressure: 1010 + (Math.random() * 10 - 5) // Pressure between 1005-1015 hPa
         });
     }
     
-    // Update the chart data
-    // Extract dates for labels
-    const newLabels = apiData.map(item => {
-        const date = new Date(item.time);
-        return `${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}`;
+    return data;
+}
+
+// Process the API data and update our data objects
+function processApiData(apiData) {
+    if (!apiData || apiData.length === 0) {
+        renderForecast();
+        return;
+    }
+    
+    // Get the current time
+    const now = new Date();
+    const currentHour = now.getHours();
+    
+    // Create hourly historical data from API data
+    const processedHourlyData = [];
+    
+    // Get the most recent data point for "Now"
+    const latest = apiData[0];
+    processedHourlyData.push({
+        time: "Now",
+        temp: Math.round(latest.temp),
+        hum: Math.round(latest.hum),
+        pressure: Math.round(latest.pressure)
     });
+    
+    // Create data points for previous hours (9:00, 8:00, etc.)
+    for (let i = 1; i <= 5; i++) {
+        // Calculate the target hour
+        const targetHour = currentHour - i;
+        const displayHour = targetHour < 0 ? targetHour + 24 : targetHour; // Handle midnight crossing
+        
+        // Format the hour for display
+        const ampm = displayHour >= 12 ? 'PM' : 'AM';
+        const hour12 = displayHour % 12 || 12; // Convert to 12-hour format
+        const timeLabel = `${hour12} ${ampm}`;
+        
+        // Find the closest data point to this hour
+        let closestDataPoint = null;
+        let smallestTimeDiff = Infinity;
+        
+        for (const dataPoint of apiData) {
+            const dataTime = new Date(dataPoint.time);
+            const dataHour = dataTime.getHours();
+            
+            // Check if this data point is from the target hour
+            if (dataHour === displayHour) {
+                // Calculate how close this data point is to the exact hour
+                const minutes = dataTime.getMinutes();
+                const timeDiff = Math.abs(minutes);
+                
+                if (timeDiff < smallestTimeDiff) {
+                    smallestTimeDiff = timeDiff;
+                    closestDataPoint = dataPoint;
+                }
+            }
+        }
+        
+        // If we found a data point for this hour, use it
+        if (closestDataPoint) {
+            processedHourlyData.push({
+                time: timeLabel,
+                temp: Math.round(closestDataPoint.temp),
+                hum: Math.round(closestDataPoint.hum),
+                pressure: Math.round(closestDataPoint.pressure)
+            });
+        } else {
+            // If no data point found for this hour, use the previous hour's data or estimate
+            const prevHourData = processedHourlyData[processedHourlyData.length - 1];
+            processedHourlyData.push({
+                time: timeLabel,
+                temp: prevHourData.temp - 1, // Slight decrease for missing data
+                hum: prevHourData.hum,
+                pressure: prevHourData.pressure
+            });
+        }
+    }
+    
+    // Update the hourly data
+    weatherData.hourly = processedHourlyData;
+    
+    // Update the chart data
+    // Extract times for labels from the hourly data
+    const newLabels = processedHourlyData.map(item => item.time);
     
     // Update the labels array
     labels.length = 0;
     newLabels.forEach(label => labels.push(label));
     
     // Update the chart data
-    marienhamnWeatherData.temperature.values = apiData.map(item => item.temp);
-    marienhamnWeatherData.humidity.values = apiData.map(item => item.hum);
-    marienhamnWeatherData.pressure.values = apiData.map(item => item.pressure);
+    marienhamnWeatherData.temperature.values = processedHourlyData.map(item => item.temp);
+    marienhamnWeatherData.humidity.values = processedHourlyData.map(item => item.hum);
+    marienhamnWeatherData.pressure.values = processedHourlyData.map(item => item.pressure);
     
     // Update the current chart if it exists and is visible
     if (currentChart && graphVisible) {
@@ -240,28 +283,20 @@ function processApiData(apiData) {
     }
     
     // Also update the current weather display
-    updateCurrentWeatherDisplay(apiData[0]); // Changed from data[0] to apiData[0]
+    updateCurrentWeatherDisplay(latest);
+    
+    // Render the forecast
+    renderForecast();
 }
 
-// Update the current weather display with the latest data
 // Update the current weather display with the latest data
 function updateCurrentWeatherDisplay(latestData) {
     if (!latestData) return;
     
     const tempDisplay = document.querySelector('.temp-display');
-    const humidityValue = document.querySelector('.humidity-value');
-    const pressureValue = document.querySelector('.pressure-value');
     
     if (tempDisplay) {
         tempDisplay.textContent = `${Math.round(latestData.temp)}°C`;
-    }
-    
-    if (humidityValue) {
-        humidityValue.textContent = `${latestData.hum}%`;
-    }
-    
-    if (pressureValue) {
-        pressureValue.textContent = `${Math.round(latestData.pressure)} hPa`;
     }
 }
 
@@ -308,23 +343,13 @@ document.addEventListener('DOMContentLoaded', () => {
     forecastList = document.querySelector('.forecast-list');
     currentTemp = document.querySelector('.temp-display');
     
-    // Set default dates (today and a week from today)
+    // Set default dates (today and a week ago for historical data)
     const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
+    const lastWeek = new Date();
+    lastWeek.setDate(today.getDate() - 7);
     
-    document.getElementById('start-date').valueAsDate = today;
-    document.getElementById('end-date').valueAsDate = nextWeek;
-    
-    // Set up forecast button event listeners
-    const forecastBtns = document.querySelectorAll('.forecast-btn');
-    forecastBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            forecastBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderForecast(btn.textContent.toLowerCase().includes('hourly') ? 'hourly' : 'weekly');
-        });
-    });
+    document.getElementById('start-date').valueAsDate = lastWeek;
+    document.getElementById('end-date').valueAsDate = today;
     
     // Graph type buttons
     const graphButtons = document.querySelectorAll('.graph-button');
