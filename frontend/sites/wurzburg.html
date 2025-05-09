@@ -31,41 +31,56 @@
         </div>
     </header>
 
-    <div class="button-container">
+    <div class="current-weather">
+        <div class="temp-display">19°C</div>
+    </div>
+
+    <div class="forecast-toggle">
+        <button class="forecast-btn active">Hourly Forecast</button>
+        <button class="forecast-btn">Weekly Forecast</button>
+    </div>
+
+    <div class="forecast-list">
+        <!-- Content will be populated by JavaScript -->
+    </div>
+
+    <!-- Add date selector for graph -->
+    <div class="date-selector">
+        <div class="date-selector-container">
+            <div class="date-inputs">
+                <input type="date" class="date-input" id="start-date">
+                <span class="date-separator">to</span>
+                <input type="date" class="date-input" id="end-date">
+                <button class="date-button" id="show-graph-btn">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Show Graph</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add graph container and buttons (initially hidden) -->
+    <div class="button-container" id="graph-buttons" style="display: none;">
         <button class="graph-button active" data-type="temperature">
             <i class="fas fa-temperature-high"></i>
-            Temperature
+            <span>Temperature</span>
         </button>
         <button class="graph-button" data-type="humidity">
             <i class="fas fa-tint"></i>
-            Humidity
+            <span>Humidity</span>
         </button>
         <button class="graph-button" data-type="pressure">
             <i class="fas fa-compress-alt"></i>
-            Pressure
+            <span>Pressure</span>
         </button>
     </div>
 
-    <div class="graph-container">
+    <!-- Add graph container (initially hidden) -->
+    <div class="graph-container" id="graph-container" style="display: none;">
         <div class="graph-box">
             <canvas id="weatherChart"></canvas>
         </div>
     </div>
-
-    <div class="date-selector">
-        <div class="date-selector-container">
-            <div class="date-inputs">
-                <input type="date" class="date-input" id="startDate">
-                <span class="date-separator">to</span>
-                <input type="date" class="date-input" id="endDate">
-            </div>
-            <button class="date-button">
-                <i class="fas fa-calendar-alt"></i>
-                Update Date Range
-            </button>
-        </div>
-    </div>
-    
 
     <script src="../js/wurzburg.js"></script>
   </body>

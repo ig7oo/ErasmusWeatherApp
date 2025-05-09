@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Comparison</title>
+    <title>Weather Comparison</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../style/compare.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
@@ -34,15 +35,15 @@
     <div class="button-container">
         <button class="graph-button active" data-type="temperature">
             <i class="fas fa-temperature-high"></i>
-            Temperature
+            <span>Temperature</span>
         </button>
         <button class="graph-button" data-type="humidity">
             <i class="fas fa-tint"></i>
-            Humidity
+            <span>Humidity</span>
         </button>
         <button class="graph-button" data-type="pressure">
             <i class="fas fa-compress-alt"></i>
-            Pressure
+            <span>Pressure</span>
         </button>
     </div>
 
@@ -55,48 +56,27 @@
     <div class="date-selector">
         <div class="date-selector-container">
             <div class="date-inputs">
-                <input type="date" id="startDate" class="date-input">
+                <input type="date" class="date-input" id="start-date">
                 <span class="date-separator">to</span>
-                <input type="date" id="endDate" class="date-input">
+                <input type="date" class="date-input" id="end-date">
             </div>
-            <button class="date-button" id="dateRange">
+            <button class="date-button" id="update-date-btn">
                 <i class="fas fa-calendar"></i>
-                Select Date Range
+                <span>Update Date Range</span>
             </button>
         </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="forecast-toggle">
+        <button class="forecast-btn active" data-city="both">Both Cities</button>
+        <button class="forecast-btn" data-city="mariehamn">Mariehamn</button>
+        <button class="forecast-btn" data-city="wurzburg">Würzburg</button>
+    </div>
 
-    <div class="forecast-list">
-        <div class="forecast-item">
-            <span class="time">12 AM</span>
-            <i class="fas fa-cloud weather-icon"></i>
-            <span class="temp">19°C</span>
-        </div>
-        <div class="forecast-item current">
-            <span class="time">Now</span>
-            <i class="fas fa-cloud weather-icon"></i>
-            <span class="temp">19°C</span>
-        </div>
-        <div class="forecast-item">
-            <span class="time">2 PM</span>
-            <i class="fas fa-cloud-sun weather-icon"></i>
-            <span class="temp">18°C</span>
-        </div>
-        <div class="forecast-item">
-            <span class="time">4 PM</span>
-            <i class="fas fa-cloud-sun weather-icon"></i>
-            <span class="temp">20°C</span>
-        </div>
-        <div class="forecast-item">
-            <span class="time">6 PM</span>
-            <i class="fas fa-cloud weather-icon"></i>
-            <span class="temp">17°C</span>
-        </div>
+    <div id="comparison-forecast">
+        <!-- Content will be populated by JavaScript -->
     </div>
 
     <script src="../js/compare.js"></script>
-    <script src="../js/language.js"></script>
   </body>
 </html>
