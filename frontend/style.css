@@ -232,7 +232,7 @@ body[style*="background"]::after {
 .button-container {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    padding: 1rem;
     margin-top: 120px;
     flex-wrap: wrap;
     padding: 0 1rem;
@@ -253,7 +253,7 @@ body[style*="background"]::after {
 }
 
 .graph-button:hover {
-    background: #3498db;
+    background: #3499db;
 }
 
 .graph-button.active {
@@ -416,4 +416,218 @@ canvas {
 
 .mariehamn-bg {
     background: url('images/mariehamn.jpg') center/cover no-repeat fixed;
+}
+
+.current-weather {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+    gap: 20px;
+}
+
+.temp-display {
+    font-size: 4rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.weather-divider {
+    width: 2px;
+    height: 50px;
+    background-color: white;
+    border-radius: 1px;
+}
+
+.weather-condition {
+    font-size: 2rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.forecast-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.forecast-btn{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.forecast-btn.active {
+    background: rgba(255,255,255,0.4);
+    transform: scale(1.05);
+}
+
+.forecast-list {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding: 20px;
+    max-width: 100%;
+    overflow-x: auto;
+    justify-content: center;
+}
+
+.metric {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.3s ease;
+}
+
+.metric:hover {
+    transform: scale(1.2);
+    cursor: help;
+}
+
+.metric-icon {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.forecast-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px 15px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(5px);
+    border-radius: 50px;
+    color: white;
+    width: 90px;
+    height: 220px;
+    text-align: center;
+    justify-content: space-between;
+}
+
+.forecast-item.current {
+    background: rgba(255,255,255,0.4);
+    transform: scale(1.05);
+}
+
+.time {
+    font-size: 1rem;
+}
+
+.weather-icon {
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
+.temp {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.weather-details {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 20px auto;
+}
+
+.detail-card {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    padding: 20px 40px;
+    text-align: center;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.detail-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.3);
+}
+
+.detail-icon {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.detail-value {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.detail-label {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.temp, .detail-value {
+    transition: transform 0.3s ease;
+}
+
+.temp:hover, .detail-value:hover {
+    transform: scale(1.2);
+    cursor: default;
+}
+
+/* Add these styles at the end of your CSS file if needed */
+#graph-container {
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+.graph-box {
+    background: rgba(44, 62, 80, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    min-height: 400px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    box-sizing: border-box;
+    aspect-ratio: 16/9;
+    position: relative;
+}
+
+#graph-buttons {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.date-selector {
+    margin-top: 40px;
+}
+
+.date-input {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.date-button {
+    background: rgba(52, 152, 219, 0.7);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.date-button:hover {
+    background: rgba(52, 152, 219, 0.9);
+    transform: translateY(-2px);
 }
