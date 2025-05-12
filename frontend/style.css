@@ -109,6 +109,13 @@ body[style*="background"]::after {
     z-index: 1002;
 }
 
+.city-indicator {
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #ddd;
+}
+
 .language-selector {
     cursor: pointer;
     z-index: 1002;
@@ -282,6 +289,15 @@ body[style*="background"]::after {
     position: relative;
 }
 
+compare-contaienr {
+    /* Use a gradient background instead of an image that might be missing */
+    background: linear-gradient(to right, #2c3e50, #4a5f70);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white;
+}
+
 .compare-arrows {
     position: fixed;
     top: 50%;
@@ -320,6 +336,15 @@ body[style*="background"]::after {
     transform: scale(1.2);
     text-shadow: 3px 3px 0 #000;
     letter-spacing: 2px;
+}
+
+#comparison-forecast {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 40px;
 }
 
 @keyframes arrowPulse {
@@ -511,9 +536,21 @@ canvas {
     justify-content: space-between;
 }
 
+.forecast-item:hover {
+    transform: translateY(-5px);
+}
+
 .forecast-item.current {
     background: rgba(255,255,255,0.4);
     transform: scale(1.05);
+}
+
+.forecast-item.mariehamn {
+    border-left: 4px solid #ff6384;
+}
+
+.forecast-item.wurzburg {
+    border-left: 4px solid #36a2eb;
 }
 
 .time {
@@ -528,6 +565,13 @@ canvas {
 .temp {
     font-size: 1.2rem;
     font-weight: bold;
+}
+
+.time {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
 }
 
 .weather-details {
@@ -630,4 +674,10 @@ canvas {
 .date-button:hover {
     background: rgba(52, 152, 219, 0.9);
     transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .button-container {
+        margin-top: 80px;
+    }
 }

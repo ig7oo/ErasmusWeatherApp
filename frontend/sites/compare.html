@@ -6,77 +6,78 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Weather Comparison</title>
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../style/compare.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <header class="header">
-        <a href="wurzhamn.html" class="home-icon">
-            <i class="fas fa-home"></i>
-        </a>
-        <h1 class="city-name">Comparison</h1>
-        <div class="language-selector">
-            <div class="selected-language">
-                <img src="../images/english.png" alt="English" class="lang-flag">
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="language-dropdown">
-                <div class="language-option">
-                    <img src="../images/german.png" alt="German" class="lang-flag">
+    <div class="compare-container">
+        <header class="header">
+            <a href="wurzhamn.html" class="home-icon">
+                <i class="fas fa-home"></i>
+            </a>
+            <h1 class="city-name">Comparison</h1>
+            <div class="language-selector">
+                <div class="selected-language">
+                    <img src="../images/english.png" alt="English" class="lang-flag">
+                    <i class="fas fa-chevron-down"></i>
                 </div>
-                <div class="language-option">
-                    <img src="../images/swedish.png" alt="Swedish" class="lang-flag">
+                <div class="language-dropdown">
+                    <div class="language-option">
+                        <img src="../images/german.png" alt="German" class="lang-flag">
+                    </div>
+                    <div class="language-option">
+                        <img src="../images/swedish.png" alt="Swedish" class="lang-flag">
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <div class="button-container">
-        <button class="graph-button active" data-type="temperature">
-            <i class="fas fa-temperature-high"></i>
-            <span>Temperature</span>
-        </button>
-        <button class="graph-button" data-type="humidity">
-            <i class="fas fa-tint"></i>
-            <span>Humidity</span>
-        </button>
-        <button class="graph-button" data-type="pressure">
-            <i class="fas fa-compress-alt"></i>
-            <span>Pressure</span>
-        </button>
-    </div>
-
-    <div class="graph-container">
-        <div class="graph-box">
-            <canvas id="weatherChart"></canvas>
-        </div>
-    </div>
-
-    <div class="date-selector">
-        <div class="date-selector-container">
-            <div class="date-inputs">
-                <input type="date" class="date-input" id="start-date">
-                <span class="date-separator">to</span>
-                <input type="date" class="date-input" id="end-date">
-            </div>
-            <button class="date-button" id="update-date-btn">
-                <i class="fas fa-calendar"></i>
-                <span>Update Date Range</span>
+        <div class="button-container">
+            <button class="graph-button active" data-type="temperature">
+                <i class="fas fa-temperature-high"></i>
+                <span>Temperature</span>
+            </button>
+            <button class="graph-button" data-type="humidity">
+                <i class="fas fa-tint"></i>
+                <span>Humidity</span>
+            </button>
+            <button class="graph-button" data-type="pressure">
+                <i class="fas fa-compress-alt"></i>
+                <span>Pressure</span>
             </button>
         </div>
-    </div>
 
-    <div class="forecast-toggle">
-        <button class="forecast-btn active" data-city="both">Both Cities</button>
-        <button class="forecast-btn" data-city="mariehamn">Mariehamn</button>
-        <button class="forecast-btn" data-city="wurzburg">Würzburg</button>
-    </div>
+        <div class="graph-container">
+            <div class="graph-box">
+                <canvas id="weatherChart"></canvas>
+            </div>
+        </div>
 
-    <div id="comparison-forecast">
-        <!-- Content will be populated by JavaScript -->
-    </div>
+        <div class="date-selector">
+            <div class="date-selector-container">
+                <div class="date-inputs">
+                    <input type="date" class="date-input" id="start-date">
+                    <span class="date-separator">to</span>
+                    <input type="date" class="date-input" id="end-date">
+                </div>
+                <button class="date-button" id="update-date-btn">
+                    <i class="fas fa-calendar"></i>
+                    <span>Update Date Range</span>
+                </button>
+            </div>
+        </div>
 
-    <script src="../js/compare.js"></script>
+        <div class="forecast-toggle">
+            <button class="forecast-btn active" data-city="both">Both Cities</button>
+            <button class="forecast-btn" data-city="mariehamn">Mariehamn</button>
+            <button class="forecast-btn" data-city="wurzburg">Würzburg</button>
+        </div>
+
+        <div id="comparison-forecast">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+
+        <script src="../js/compare.js"></script>
+    </div>
   </body>
 </html>
