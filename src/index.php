@@ -20,4 +20,4 @@ $result = $fetcher->fetch($tablename);
 
 echo $result;
 
-?>
+
