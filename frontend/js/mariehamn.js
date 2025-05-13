@@ -1,30 +1,23 @@
-// Weather data object with initial values (will be replaced with API data)
+// Replace the initial weatherData object with an empty structure
 const weatherData = {
-    hourly: [
-        { time: "Now", temp: 19, hum: 68, pressure: 1013 },
-        { time: "9 AM", temp: 18, hum: 70, pressure: 1012 },
-        { time: "8 AM", temp: 17, hum: 72, pressure: 1012 },
-        { time: "7 AM", temp: 16, hum: 75, pressure: 1011 },
-        { time: "6 AM", temp: 15, hum: 78, pressure: 1010 },
-        { time: "5 AM", temp: 14, hum: 80, pressure: 1010 }
-    ]
+    hourly: []
 };
 
-// Chart data object
+// Replace marienhamnWeatherData with empty data
 let marienhamnWeatherData = {
     temperature: {
         label: 'Temperature (°C)',
-        values: [19, 18, 17, 16, 15, 14],
+        values: [],
         color: '#ff6384'
     },
     humidity: {
         label: 'Humidity (%)',
-        values: [68, 70, 72, 75, 78, 80],
+        values: [],
         color: '#36a2eb'
     },
     pressure: {
         label: 'Pressure (hPa)',
-        values: [1013, 1012, 1012, 1011, 1010, 1010],
+        values: [],
         color: '#4bc0c0'
     }
 };
@@ -34,7 +27,7 @@ let currentChart = null;
 let graphVisible = false;
 let forecastList;
 let currentTemp;
-const labels = ['Now', '9 AM', '8 AM', '7 AM', '6 AM', '5 AM'];
+const labels = [];
 
 // Global function for updating current weather
 function updateCurrentWeather(data) {
@@ -48,6 +41,7 @@ function updateCurrentWeather(data) {
 }
 
 // Global function for rendering forecast
+// Global function for rendering forecast
 function renderForecast() {
     if (!forecastList) {
         forecastList = document.querySelector('.forecast-list');
@@ -56,27 +50,38 @@ function renderForecast() {
     if (!forecastList) return;
     
     const data = weatherData.hourly;
-    forecastList.innerHTML = data.map((item, index) => `
-        <div class="forecast-item ${index === 0 ? 'current' : ''}" 
-             onclick="updateCurrentWeather(${JSON.stringify(item)})">
-            <span class="time">${item.time}</span>
-            <div class="metric">
-                <i class="fas fa-temperature-high metric-icon"></i>
-                <span class="temp">${item.temp}°C</span>
+    
+    // Check if data exists and has items before rendering
+    if (data && data.length > 0) {
+        forecastList.innerHTML = data.map((item, index) => `
+            <div class="forecast-item ${index === 0 ? 'current' : ''}" 
+                 onclick="updateCurrentWeather(${JSON.stringify(item)})">
+                <span class="time">${item.time}</span>
+                <div class="metric">
+                    <i class="fas fa-temperature-high metric-icon"></i>
+                    <span class="temp">${item.temp}°C</span>
+                </div>
+                <div class="metric">
+                    <i class="fas fa-tint metric-icon"></i>
+                    <span class="detail-value">${item.hum}%</span>
+                </div>
+                <div class="metric">
+                    <i class="fas fa-compress-alt metric-icon"></i>
+                    <span class="detail-value">${item.pressure} hPa</span>
+                </div>
             </div>
-            <div class="metric">
-                <i class="fas fa-tint metric-icon"></i>
-                <span class="detail-value">${item.hum}%</span>
-            </div>
-            <div class="metric">
-                <i class="fas fa-compress-alt metric-icon"></i>
-                <span class="detail-value">${item.pressure} hPa</span>
-            </div>
-        </div>
-    `).join('');
+        `).join('');
 
-    updateCurrentWeather(data[0]);
+        // Only update current weather if we have data
+        if (data[0]) {
+            updateCurrentWeather(data[0]);
+        }
+    } else {
+        // Display a loading message if no data is available
+        forecastList.innerHTML = '<div class="forecast-item">Loading weather data...</div>';
+    }
 }
+
 
 // Function to update the chart with the selected data type
 function updateChart(type) {
@@ -134,25 +139,28 @@ function updateChart(type) {
 async function fetchWeatherData() {
     try {
         // Try to fetch from the API with no-cors mode to bypass CORS restrictions
-        const response = await fetch('http://192.168.108.13:8081/wuerzburg', {
+        const response = await fetch('http://192.168.108.13:8081/mariehamn', {
             mode: 'no-cors'  // This will allow the request but make the response opaque
         });
         
         console.log('Response received:', response);
         
         // With no-cors mode, we can't access the response content
-        // So we'll just log that we got a response and use our initial data
+        // So we'll just log that we got a response and use dummy data
         console.log('API connection successful, but response is opaque due to CORS restrictions');
         
-        // We'll just use our initial data since we can't parse the response
-        renderForecast();
+        // Generate dummy data since we can't parse the response
+        const dummyData = generateDummyData();
+        processApiData(dummyData);
     } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
         
-        // Still render with initial data
-        renderForecast();
+        // Generate dummy data on error
+        const dummyData = generateDummyData();
+        processApiData(dummyData);
     }
 }
+
 
 // Generate realistic dummy data for testing
 function generateDummyData() {

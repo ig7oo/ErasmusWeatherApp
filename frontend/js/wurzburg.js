@@ -1,56 +1,40 @@
-// Weather data object with initial values (will be replaced with API data)
+// Replace the initial weatherData object with an empty structure
 const weatherData = {
     current: {
-        temp: 19,
-        hum: 68,
-        pressure: 1013
+        temp: 0,
+        hum: 0,
+        pressure: 0
     },
-    hourly: [
-        { time: "Now", temp: 19, hum: 68, pressure: 1013 },
-        { time: "2 PM", temp: 20, hum: 65, pressure: 1012 },
-        { time: "4 PM", temp: 21, hum: 62, pressure: 1012 },
-        { time: "6 PM", temp: 19, hum: 70, pressure: 1011 },
-        { time: "8 PM", temp: 17, hum: 75, pressure: 1011 },
-        { time: "10 PM", temp: 16, hum: 78, pressure: 1010 },
-        { time: "12 AM", temp: 15, hum: 80, pressure: 1010 },
-        { time: "2 AM", temp: 14, hum: 82, pressure: 1009 }
-    ],
-    weekly: [
-        { time: "Today", temp: 19, hum: 68, pressure: 1013 },
-        { time: "Tue", temp: 22, hum: 60, pressure: 1014 },
-        { time: "Wed", temp: 20, hum: 65, pressure: 1012 },
-        { time: "Thu", temp: 18, hum: 85, pressure: 1009 },
-        { time: "Fri", temp: 17, hum: 80, pressure: 1010 },
-        { time: "Sat", temp: 21, hum: 62, pressure: 1015 },
-        { time: "Sun", temp: 20, hum: 65, pressure: 1013 }
-    ]
+    hourly: [],
+    weekly: []
 };
 
-// Chart data object
+// Replace wurzburgWeatherData with empty data
 let wurzburgWeatherData = {
     temperature: {
         label: 'Temperature (°C)',
-        values: [2, 4, 8, 12, 18, 22],
+        values: [],
         color: '#ff6384'
     },
     humidity: {
         label: 'Humidity (%)',
-        values: [85, 80, 75, 70, 65, 60],
+        values: [],
         color: '#36a2eb'
     },
     pressure: {
         label: 'Pressure (hPa)',
-        values: [1013, 1015, 1012, 1010, 1014, 1016],
+        values: [],
         color: '#4bc0c0'
     }
 };
+
 
 // Global variables
 let currentChart = null;
 let graphVisible = false;
 let forecastList;
 let currentTemp;
-const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const labels = [];
 
 // Global function for updating current weather
 function updateCurrentWeather(data) {
