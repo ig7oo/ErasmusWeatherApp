@@ -1,4 +1,4 @@
-body {
+.container {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
@@ -7,7 +7,7 @@ body {
 }
 
 /* Split background only applies to default body */
-body:not(.wurzburg-bg):not(.mariehamn-bg)::before {
+.container:not(.wurzburg-bg):not(.mariehamn-bg)::before {
     content: '';
     position: fixed;
     top: 0;
@@ -20,7 +20,7 @@ body:not(.wurzburg-bg):not(.mariehamn-bg)::before {
     z-index: -1;
 }
 
-body:not(.wurzburg-bg):not(.mariehamn-bg)::after {
+.container:not(.wurzburg-bg):not(.mariehamn-bg)::after {
     content: '';
     position: fixed;
     top: 0;
@@ -33,14 +33,14 @@ body:not(.wurzburg-bg):not(.mariehamn-bg)::after {
     z-index: -1;
 }
 
-body[style*="background"] {
+.container.style*="background"] {
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
 }
 
-body[style*="background"]::before,
-body[style*="background"]::after {
+.container[style*="background"]::before,
+.container[style*="background"]::after {
     content: none;
 }
 
