@@ -230,6 +230,36 @@ function processApiData(apiData) {
     }
 }
 
+// Add this function to filter data by date range
+async function fetchDataByDateRange(startDate, endDate) {
+  try {
+    // Format dates for API request
+    const formattedStartDate = startDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+    
+    // Construct URL with date parameters
+    const url = `http://192.168.108.13:8081/wuerzburg?start=${formattedStartDate}&end=${formattedEndDate}`;
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    
+    const data = await response.json();
+    processApiData(data);
+    
+    // If graph is visible, update it
+    if (graphVisible) {
+      const activeButton = document.querySelector('.graph-button.active');
+      if (activeButton) {
+        updateChart(activeButton.dataset.type);
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching data by date range:', error);
+  }
+}
+
 // Function to toggle graph visibility
 function toggleGraph() {
     const graphContainer = document.getElementById('graph-container');
@@ -275,11 +305,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Set default dates (today and a week from today)
     const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
+    const lastWeek = new Date();
+    lastWeek.setDate(today.getDate() - 7);
     
-    document.getElementById('start-date').valueAsDate = today;
-    document.getElementById('end-date').valueAsDate = nextWeek;
+    document.getElementById('start-date').valueAsDate = lastWeek;
+    document.getElementById('end-date').valueAsDate = today;
     
     // Set up forecast button event listeners
     const forecastBtns = document.querySelectorAll('.forecast-btn');
@@ -305,7 +335,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Show/Hide graph button
-    document.getElementById('show-graph-btn').addEventListener('click', toggleGraph);
+    document.getElementById('show-graph-btn').addEventListener('click', () => {
+        // Get date range values before toggling graph
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        
+        if (startDateInput && endDateInput && startDateInput.value && endDateInput.value) {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            
+            // Fetch data with the selected date range
+            fetchDataByDateRange(startDate, endDate);
+        }
+        
+        toggleGraph();
+    });
     
     // Initial fetch and render
     fetchWeatherData();
