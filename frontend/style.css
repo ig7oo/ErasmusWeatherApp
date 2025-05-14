@@ -33,7 +33,7 @@
     z-index: -1;
 }
 
-.container.style*="background"] {
+.container[style*="background"] {
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
