@@ -188,6 +188,7 @@ function generateDummyData() {
 }
 
 // Process the API data and update our data objects
+// Process the API data and update our data objects
 function processApiData(apiData) {
     if (!apiData || apiData.length === 0) {
         renderForecast();
@@ -201,11 +202,9 @@ function processApiData(apiData) {
     }
     lastDataTimestamp = dataTimestamp;
 
-    const now = new Date();
-    const currentHour = now.getHours();
-
     const processedHourlyData = [];
 
+    // Add the latest data point as "Now"
     const latest = apiData[0];
     processedHourlyData.push({
         time: "Now",
@@ -214,48 +213,24 @@ function processApiData(apiData) {
         pressure: Math.round(latest.pressure)
     });
 
-    for (let i = 1; i <= 5; i++) {
-        const targetHour = currentHour - i;
-        const displayHour = targetHour < 0 ? targetHour + 24 : targetHour;
+    // Process the next 5 data points with their actual timestamps
+    for (let i = 1; i < Math.min(6, apiData.length); i++) {
+        const dataPoint = apiData[i];
+        const dataTime = new Date(dataPoint.time);
+        
+        // Format time as HH:MM
+        const hours = dataTime.getHours();
+        const minutes = dataTime.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const hour12 = hours % 12 || 12; // Convert to 12-hour format
+        const timeLabel = `${hour12}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
 
-        const ampm = displayHour >= 12 ? 'PM' : 'AM';
-        const hour12 = displayHour % 12 || 12;
-        const timeLabel = `${hour12} ${ampm}`;
-
-        let closestDataPoint = null;
-        let smallestTimeDiff = Infinity;
-
-        for (const dataPoint of apiData) {
-            const dataTime = new Date(dataPoint.time);
-            const dataHour = dataTime.getHours();
-
-            if (dataHour === displayHour) {
-                const minutes = dataTime.getMinutes();
-                const timeDiff = Math.abs(minutes);
-
-                if (timeDiff < smallestTimeDiff) {
-                    smallestTimeDiff = timeDiff;
-                    closestDataPoint = dataPoint;
-                }
-            }
-        }
-
-        if (closestDataPoint) {
-            processedHourlyData.push({
-                time: timeLabel,
-                temp: Math.round(closestDataPoint.temp),
-                hum: Math.round(closestDataPoint.hum),
-                pressure: Math.round(closestDataPoint.pressure)
-            });
-        } else {
-            const prevHourData = processedHourlyData[processedHourlyData.length - 1];
-            processedHourlyData.push({
-                time: timeLabel,
-                temp: prevHourData.temp - 1,
-                hum: prevHourData.hum,
-                pressure: prevHourData.pressure
-            });
-        }
+        processedHourlyData.push({
+            time: timeLabel,
+            temp: Math.round(dataPoint.temp),
+            hum: Math.round(dataPoint.hum),
+            pressure: Math.round(dataPoint.pressure)
+        });
     }
 
     weatherData.hourly = processedHourlyData;
@@ -280,6 +255,7 @@ function processApiData(apiData) {
     updateCurrentWeatherDisplay(latest);
     renderForecast();
 }
+
 
 // Update the current weather display with the latest data
 function updateCurrentWeatherDisplay(latestData) {
