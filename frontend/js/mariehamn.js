@@ -24,11 +24,11 @@ let marienhamnWeatherData = {
 
 // Global variables
 let currentChart = null;
-let graphVisible = false;
 let forecastList;
 let currentTemp;
 const labels = [];
 let lastDataTimestamp = null;
+let activeType = 'temperature'; // Default chart type
 
 // Global function for updating current weather
 function updateCurrentWeather(data) {
@@ -85,7 +85,19 @@ function updateChart(type) {
         currentChart.destroy();
     }
 
-    currentChart = new Chart(document.getElementById('weatherChart'), {
+    // Make sure we have data to display
+    if (marienhamnWeatherData[type].values.length === 0) {
+        console.log("No data available for chart");
+        return;
+    }
+
+    const ctx = document.getElementById('weatherChart');
+    if (!ctx) {
+        console.error("Canvas element not found");
+        return;
+    }
+
+    currentChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
@@ -156,12 +168,9 @@ async function fetchWeatherData() {
     } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
 
-        // Use dummy data only if no data has been loaded yet
-        if (!weatherData.hourly.length) {
-            const dummyData = generateDummyData();
-            processApiData(dummyData);
-        }
-
+        // Always use dummy data when API is unavailable
+        const dummyData = generateDummyData();
+        processApiData(dummyData);
         updateLastUpdatedTime();
     }
 }
@@ -188,14 +197,14 @@ function generateDummyData() {
 }
 
 // Process the API data and update our data objects
-// Process the API data and update our data objects
 function processApiData(apiData) {
     if (!apiData || apiData.length === 0) {
-        renderForecast();
-        return;
+        console.error("No data received from API");
+        // Generate dummy data if no data is available
+        apiData = generateDummyData();
     }
 
-    const dataTimestamp = apiData[0].time;
+    const dataTimestamp = apiData[0]?.time || new Date().toISOString();
     if (dataTimestamp === lastDataTimestamp) {
         console.log('Data unchanged since last fetch');
         return;
@@ -235,27 +244,21 @@ function processApiData(apiData) {
 
     weatherData.hourly = processedHourlyData;
 
-    const newLabels = processedHourlyData.map(item => item.time);
+    // Clear and update labels
     labels.length = 0;
-    newLabels.forEach(label => labels.push(label));
+    processedHourlyData.forEach(item => labels.push(item.time));
 
+    // Update data for charts
     marienhamnWeatherData.temperature.values = processedHourlyData.map(item => item.temp);
     marienhamnWeatherData.humidity.values = processedHourlyData.map(item => item.hum);
     marienhamnWeatherData.pressure.values = processedHourlyData.map(item => item.pressure);
 
-    if (currentChart && graphVisible) {
-        const activeButton = document.querySelector('.graph-button.active');
-        if (activeButton) {
-            updateChart(activeButton.dataset.type);
-        } else {
-            updateChart('temperature');
-        }
-    }
+    // Update chart with current data
+    updateChart(activeType);
 
     updateCurrentWeatherDisplay(latest);
     renderForecast();
 }
-
 
 // Update the current weather display with the latest data
 function updateCurrentWeatherDisplay(latestData) {
@@ -268,81 +271,27 @@ function updateCurrentWeatherDisplay(latestData) {
     }
 }
 
-// Function to toggle graph visibility
-function toggleGraph() {
-    const graphContainer = document.getElementById('graph-container');
-    const graphButtons = document.getElementById('graph-buttons');
-    const showGraphBtn = document.getElementById('show-graph-btn');
-
-    graphVisible = !graphVisible;
-
-    if (graphVisible) {
-        graphContainer.style.display = 'block';
-        graphButtons.style.display = 'flex';
-        showGraphBtn.innerHTML = '<i class="fas fa-chart-line"></i><span>Hide Graph</span>';
-
-        const activeType = document.querySelector('.graph-button.active')?.dataset.type || 'temperature';
-        updateChart(activeType);
-        graphContainer.scrollIntoView({ behavior: 'smooth' });
-    } else {
-        graphContainer.style.display = 'none';
-        graphButtons.style.display = 'none';
-        showGraphBtn.innerHTML = '<i class="fas fa-chart-line"></i><span>Show Graph</span>';
-
-        if (currentChart) {
-            currentChart.destroy();
-            currentChart = null;
-        }
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     forecastList = document.querySelector('.forecast-list');
     currentTemp = document.querySelector('.temp-display');
-
-    const today = new Date();
-    const lastWeek = new Date();
-    lastWeek.setDate(today.getDate() - 7);
-
-    document.getElementById('start-date').valueAsDate = lastWeek;
-    document.getElementById('end-date').valueAsDate = today;
 
     const graphButtons = document.querySelectorAll('.graph-button');
     graphButtons.forEach(button => {
         button.addEventListener('click', () => {
             graphButtons.forEach(b => b.classList.remove('active'));
             button.classList.add('active');
-
-            if (graphVisible) {
-                updateChart(button.dataset.type);
-            }
+            activeType = button.dataset.type;
+            updateChart(activeType);
         });
     });
 
-    document.getElementById('show-graph-btn').addEventListener('click', toggleGraph);
-
+    // Initialize with dummy data immediately
+    const dummyData = generateDummyData();
+    processApiData(dummyData);
+    
+    // Then try to fetch real data
     fetchWeatherData();
 
-    // Poll every 5 minutes instead of 30 seconds
+    // Poll every 5 minutes
     setInterval(fetchWeatherData, 300000);
 });
-
-/* 
-  === CHANGELOG: mariehamn.js FIXES ===
-
-  1. Fixed API fetch:
-     - Removed 'no-cors' mode.
-     - Now uses real API data with response.json().
-     - Dummy data used only if no real data is available.
-
-  2. Reduced polling frequency:
-     - Changed interval from 30 seconds to 5 minutes (300,000 ms) to match API update rate.
-
-  3. Prevented duplicate updates:
-     - Added timestamp check to skip processing if data hasn't changed.
-     - Avoids unnecessary chart redraws and UI updates.
-
-  These changes improve data accuracy, stability, and performance.
-  
-  - Aleks
-*/

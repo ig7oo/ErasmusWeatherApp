@@ -7,7 +7,6 @@
     <title>Mariehamn Weather</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Add Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
@@ -22,29 +21,10 @@
             <div class="temp-display">19°C</div>
         </div>
 
-        <h3 style="text-align: center; color: white; margin-top: 30px; margin-bottom: 20px;">Historical Weather Data</h3>
-
         <div class="forecast-list">
-            <!-- Content will be populated by JavaScript -->
         </div>
 
-        <!-- Add date selector for graph -->
-        <div class="date-selector">
-            <div class="date-selector-container">
-                <div class="date-inputs">
-                    <input type="date" class="date-input" id="start-date">
-                    <span class="date-separator">to</span>
-                    <input type="date" class="date-input" id="end-date">
-                    <button class="date-button" id="show-graph-btn">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Show Graph</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add graph container and buttons (initially hidden) -->
-        <div class="button-container" id="graph-buttons" style="display: none;">
+        <div class="button-container" id="graph-buttons">
             <button class="graph-button active" data-type="temperature">
                 <i class="fas fa-temperature-high"></i>
                 <span>Temperature</span>
@@ -59,12 +39,13 @@
             </button>
         </div>
 
-        <!-- Add graph container (initially hidden) -->
-        <div class="graph-container" id="graph-container" style="display: none;">
+        <div class="graph-container" id="graph-container">
             <div class="graph-box">
                 <canvas id="weatherChart"></canvas>
             </div>
         </div>
+
+        <div id="last-updated" class="last-updated">Last updated: --:--:--</div>
 
         <script src="../js/mariehamn.js"></script>
     </div>

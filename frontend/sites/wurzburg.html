@@ -11,61 +11,45 @@
   </head>
   
 <body>
-    <div class="container mariehamn-bg">
-            <header>
-                <a href="wurzhamn.html" class="home-icon">
-                    <i class="fas fa-home"></i>
-                </a>
-            </header>
+    <div class="container wurzburg-bg">
+        <header>
+            <a href="wurzhamn.html" class="home-icon">
+                <i class="fas fa-home"></i>
+            </a>
+        </header>
 
-            <h1 class="title">WÜRZBURG</h1>
-            <div class="current-weather">
-                <div class="temp-display">19°C</div>
-            </div>
+        <h1 class="title">WÜRZBURG</h1>
+        <div class="current-weather">
+            <div class="temp-display">19°C</div>
+        </div>
 
-            <div class="forecast-list">
-                <!-- Content will be populated by JavaScript -->
-            </div>
+        <div class="forecast-list">
+        </div>
 
-            <!-- Add date selector for graph -->
-            <div class="date-selector">
-                <div class="date-selector-container">
-                    <div class="date-inputs">
-                        <input type="date" class="date-input" id="start-date">
-                        <span class="date-separator">to</span>
-                        <input type="date" class="date-input" id="end-date">
-                        <button class="date-button" id="show-graph-btn">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Show Graph</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="button-container" id="graph-buttons">
+            <button class="graph-button active" data-type="temperature">
+                <i class="fas fa-temperature-high"></i>
+                <span>Temperature</span>
+            </button>
+            <button class="graph-button" data-type="humidity">
+                <i class="fas fa-tint"></i>
+                <span>Humidity</span>
+            </button>
+            <button class="graph-button" data-type="pressure">
+                <i class="fas fa-compress-alt"></i>
+                <span>Pressure</span>
+            </button>
+        </div>
 
-            <!-- Add graph container and buttons (initially hidden) -->
-            <div class="button-container" id="graph-buttons" style="display: none;">
-                <button class="graph-button active" data-type="temperature">
-                    <i class="fas fa-temperature-high"></i>
-                    <span>Temperature</span>
-                </button>
-                <button class="graph-button" data-type="humidity">
-                    <i class="fas fa-tint"></i>
-                    <span>Humidity</span>
-                </button>
-                <button class="graph-button" data-type="pressure">
-                    <i class="fas fa-compress-alt"></i>
-                    <span>Pressure</span>
-                </button>
-            </div>
-
-            <!-- Add graph container (initially hidden) -->
-            <div class="graph-container" id="graph-container" style="display: none;">
-                <div class="graph-box">
-                    <canvas id="weatherChart"></canvas>
-                </div>
+        <div class="graph-container" id="graph-container">
+            <div class="graph-box">
+                <canvas id="weatherChart"></canvas>
             </div>
         </div>
+
+        <div id="last-updated" class="last-updated">Last updated: --:--:--</div>
+
+        <script src="../js/wurzburg.js"></script>
     </div>
-    <script src="../js/wurzburg.js"></script>
   </body>
 </html>

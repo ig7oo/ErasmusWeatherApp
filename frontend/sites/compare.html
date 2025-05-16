@@ -39,20 +39,6 @@
             </div>
         </div>
 
-        <div class="date-selector">
-            <div class="date-selector-container">
-                <div class="date-inputs">
-                    <input type="date" class="date-input" id="start-date">
-                    <span class="date-separator">to</span>
-                    <input type="date" class="date-input" id="end-date">
-                </div>
-                <button class="date-button" id="update-date-btn">
-                    <i class="fas fa-calendar"></i>
-                    <span>Update Date Range</span>
-                </button>
-            </div>
-        </div>
-
         <div class="forecast-toggle">
             <button class="forecast-btn active" data-city="both">Both Cities</button>
             <button class="forecast-btn" data-city="mariehamn">Mariehamn</button>
@@ -60,8 +46,9 @@
         </div>
 
         <div id="comparison-forecast">
-            <!-- Content will be populated by JavaScript -->
         </div>
+        
+        <div id="last-updated" class="last-updated">Last updated: --:--:--</div>
         <div class="divider"></div>
 
         <script src="../js/compare.js"></script>
